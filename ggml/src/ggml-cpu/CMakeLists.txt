@@ -120,8 +120,14 @@ if (CMAKE_OSX_ARCHITECTURES      STREQUAL "arm64" OR
             # Raspberry Pi 3, 4, Zero 2 (32-bit)
             list(APPEND ARCH_FLAGS -mno-unaligned-access)
         endif()
+        if (${CMAKE_SYSTEM_PROCESSOR} MATCHES "aarch64")
+            # NVIDIA Jetson
+            list(APPEND ARCH_FLAGS -mstrict-align -mcpu=native -mtune=native)
+        endif()
         if (GGML_SVE)
             list(APPEND ARCH_FLAGS -march=armv8.6-a+sve)
+        else()
+            list(APPEND ARCH_FLAGS -march=native)
         endif()
     endif()
 elseif (CMAKE_OSX_ARCHITECTURES STREQUAL "x86_64" OR CMAKE_GENERATOR_PLATFORM_LWR MATCHES "^(x86_64|i686|amd64|x64|win32)$" OR

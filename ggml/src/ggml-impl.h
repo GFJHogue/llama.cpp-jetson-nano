@@ -14,7 +14,7 @@
 #include <arm_sve.h>
 #endif // __ARM_FEATURE_SVE
 
-#if defined(__ARM_NEON)
+#if defined(__ARM_NEON) && !defined(__CUDACC__)
 // if YCM cannot find <arm_neon.h>, make a symbolic link to it, for example:
 //
 //   $ ln -sfn /Library/Developer/CommandLineTools/usr/lib/clang/13.1.6/include/arm_neon.h ./src/
@@ -304,7 +304,7 @@ void ggml_aligned_free(void * ptr, size_t size);
 // FP16 to FP32 conversion
 
 #if defined(__ARM_NEON)
-    #ifdef _MSC_VER
+    #if defined(_MSC_VER) ||  defined(__CUDACC__)
         typedef uint16_t ggml_fp16_internal_t;
     #else
         typedef __fp16 ggml_fp16_internal_t;
